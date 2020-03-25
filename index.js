@@ -22,7 +22,7 @@ function getQueryVariable(request, variable, array) {
 }
 
 /**
- * Respond with hello worker text
+ * Respond with content
  * @param {Request} request
  */
 async function handleRequest(request) {
@@ -40,6 +40,7 @@ async function handleRequest(request) {
   const filters = getQueryVariable(request, 'filter', true);
   let content;
   if (filters.length) {
+    // parsing json would be too slow for cloudflare worker, so we just use regex
     const text = await dataSourceResponse.text();
     if (filters.length) {
       const parts = filters.map(filter => text.match(new RegExp(`\\n\\s\\s"${filter}":[\\s\\S]+?\\n\\s\\s}`)));
